@@ -1,8 +1,16 @@
 import User from '../models/user.model.js'
+import bcrypt from 'bcryptjs'
+import { generateToken } from '../lib/utils.js'
 
 export const signup = async (req, res) => {
     const { fullName, email, password } = req.body
     try {
+
+        // check if all fields are provided
+        if (!fullName || !email || !password) {
+            return res.status(400).json({ message: "Please provide all fields" })
+        }
+
         // check if the userpassword is at least 6 characters
         if (password.length < 6) {
             return res.status(400).json({ message: "Password must be at least 6 characters" })
@@ -31,11 +39,11 @@ export const signup = async (req, res) => {
         // If user is created successfully, send a response
         if (newUser) {
             // generate jwt token
-            const token = generateToken(newUser._id, res)
+            generateToken(newUser._id, res)
             await newUser.save()
 
             res.status(201).json({
-                _id: newUser._id,
+                _id: newUser._id, // Created by MongoDB automatically
                 fullName: newUser.fullName,
                 email: newUser.email,
                 profilePicture: newUser.profilePicture,
