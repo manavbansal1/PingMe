@@ -1,5 +1,5 @@
 import {create } from 'zustand';
-import axiosInsance from '../lib/axios.js';
+import {axiosInstance} from '../lib/axios.js';
 
 export const useAuthStore = create((set) => ({
     authUser : null,
@@ -11,7 +11,8 @@ export const useAuthStore = create((set) => ({
 
     checkAuth: async () => {
         try {
-            const response = await axiosInsance.get('/auth/checkAuth');
+            // Checking auth status from backend
+            const response = await axiosInstance.get('/auth/checkAuth');
             set({authUser : response.data});
         } catch (error) {
             console.log("Error in checkAuth : ", error);
