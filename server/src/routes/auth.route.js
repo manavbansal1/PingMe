@@ -11,8 +11,8 @@ router.post('/login', login);
 
 router.post('/logout', logout);
 
-router.put('update-profile', protectRoute, updateProfile); // protectRoute middleware to protect this route
+router.put('/update-profile', protectRoute, updateProfile); // protectRoute middleware to protect this route
 
-router.get('/check', protectRoute, checkAuth);
+router.get('/checkAuth', protectRoute, checkAuth);
 
 export default router;
