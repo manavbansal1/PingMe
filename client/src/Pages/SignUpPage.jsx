@@ -38,7 +38,6 @@ const SignUpPage = () => {
     if (isValid === true) {
       signup(formData);
     }
-     
   }
 
   return (
