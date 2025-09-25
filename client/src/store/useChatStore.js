@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { axiosInstance } from "../lib/axios.js";
 import toast from "react-hot-toast";
+import { useAuthStore } from './useAuthStore.js'
 
 export const useChatStore = create((set, get) => ({
     messages : [],
@@ -54,6 +55,14 @@ export const useChatStore = create((set, get) => ({
 
     subscribeToMessages: () => {
         // TODO: Implement socket subscription for real-time messages
+        const {selectedUser} = get()
+        if (!selectedUser) return;
+
+        const socket = useAuthStore.getState().socket;
+
+        socket.on("newMessage", (newMessage) => {
+            set({ messages : [...get().messages, newMessage],})
+        })
         console.log("Subscribing to messages");
     },
 
