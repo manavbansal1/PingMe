@@ -1,9 +1,10 @@
 import User from "../models/user.model.js";
 import Message from "../models/message.model.js";
+import cloudinary from "../lib/cloudinary.js";
 
 export const getUsersForSidebar = async (req, res) => {
     try {
-        const loggedInUserId = req.user.id; // Assuming req.user is set by the authentication middleware
+        const loggedInUserId = req.user._id; // Changed from req.user.id to req.user._id
         
         // Fetch users excluding the logged-in user
         const filteredUsers = await User.find({ _id: { $ne: loggedInUserId } }).select('-password');
