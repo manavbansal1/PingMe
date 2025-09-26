@@ -5,17 +5,22 @@ import MessageInput from "./MessageInput.jsx";
 import MessageSkeleton from "./Skeletons/MessageSkeleton.jsx";
 import { useAuthStore } from "../store/useAuthStore";
 import { formatMessageTime } from "../lib/utils";
+import { MessageCircle } from "lucide-react";
+import '../CSS/ChatContainer.css';
 
 const ChatContainer = () => {
-  const { messages,getMessages, isMessagesLoading, selectedUser, subscribeToMessages, unsubscribeFromMessages,} = useChatStore();
+  const { messages, getMessages, isMessagesLoading, selectedUser, subscribeToMessages, unsubscribeFromMessages } = useChatStore();
   const { authUser } = useAuthStore();
   const messageEndRef = useRef(null);
 
   useEffect(() => {
-    getMessages(selectedUser._id);
-    subscribeToMessages();
+    if (selectedUser?._id) {
+      getMessages(selectedUser._id);
+      subscribeToMessages();
+    }
 
-    return () => unsubscribeFromMessages();}, [selectedUser._id, getMessages, subscribeToMessages, unsubscribeFromMessages]);
+    return () => unsubscribeFromMessages();
+  }, [selectedUser?._id, getMessages, subscribeToMessages, unsubscribeFromMessages]);
 
   useEffect(() => {
     if (messageEndRef.current && messages) {
@@ -25,56 +30,72 @@ const ChatContainer = () => {
 
   if (isMessagesLoading) {
     return (
-      <div className="flex-1 flex flex-col overflow-auto">
+      <div className="chat-container">
         <ChatHeader />
-        <MessageSkeleton />
+        <div className="loading-messages">
+          <div className="loading-spinner"></div>
+          Loading messages...
+        </div>
         <MessageInput />
       </div>
     );
   }
 
   return (
-    <div className="flex-1 flex flex-col overflow-auto">
+    <div className="chat-container">
       <ChatHeader />
 
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {messages.map((message) => (
-          <div
-            key={message._id}
-            className={`chat ${message.senderId === authUser._id ? "chat-end" : "chat-start"}`}
-            ref={messageEndRef}
-          >
-            <div className=" chat-image avatar">
-              <div className="size-10 rounded-full border">
+      <div className="messages-area">
+        {messages && messages.length > 0 ? (
+          messages.map((message) => (
+            <div
+              key={message._id}
+              className={`message ${message.senderId === authUser._id ? 'sent' : 'received'}`}
+            >
+              <div className="message-avatar">
                 <img
                   src={
                     message.senderId === authUser._id
-                      ? authUser.profilePicture || "/avatar.png" : selectedUser.profilePicture || "/avatar.png"}
-                  alt="profile pic"
+                      ? authUser.profilePicture || "/avatar.png" 
+                      : selectedUser.profilePicture || "/avatar.png"
+                  }
+                  alt="profile"
+                  className="avatar-img"
                 />
               </div>
+              
+              <div className="message-content">
+                <div className="message-time">
+                  {formatMessageTime(message.createdAt)}
+                </div>
+                
+                <div className={`message-bubble ${message.senderId === authUser._id ? 'sent' : 'received'}`}>
+                  {message.image && (
+                    <img
+                      src={message.image}
+                      alt="Attachment"
+                      className="message-image"
+                    />
+                  )}
+                  {message.text && (
+                    <p className="message-text">{message.text}</p>
+                  )}
+                </div>
+              </div>
             </div>
-            <div className="chat-header mb-1">
-              <time className="text-xs opacity-50 ml-1">
-                {formatMessageTime(message.createdAt)}
-              </time>
-            </div>
-            <div className="chat-bubble flex flex-col">
-              {message.image && (
-                <img
-                  src={message.image}
-                  alt="Attachment"
-                  className="sm:max-w-[200px] rounded-md mb-2"
-                />
-              )}
-              {message.text && <p>{message.text}</p>}
-            </div>
+          ))
+        ) : (
+          <div className="no-messages">
+            <MessageCircle className="no-messages-icon" />
+            <h3>No messages yet</h3>
+            <p>Start a conversation with {selectedUser?.fullName}</p>
           </div>
-        ))}
+        )}
+        <div ref={messageEndRef} />
       </div>
-
       <MessageInput />
     </div>
   );
 };
+
 export default ChatContainer;
