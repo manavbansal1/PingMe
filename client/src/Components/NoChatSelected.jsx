@@ -1,26 +1,50 @@
-import { MessageSquare } from "lucide-react";
+import { MessageSquare, Users, Image as ImageIcon, Smile } from "lucide-react";
+import '../CSS/NoChatSelected.css';
 
 const NoChatSelected = () => {
   return (
-    <div className="w-full flex flex-1 flex-col items-center justify-center p-16 bg-base-100/50">
-      <div className="max-w-md text-center space-y-6">
+    <div className="no-chat-container">
+      <div className="welcome-content">
         {/* Icon Display */}
-        <div className="flex justify-center gap-4 mb-4">
-          <div className="relative">
-            <div
-              className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center
-             justify-center animate-bounce"
-            >
-              <MessageSquare className="w-8 h-8 text-primary " />
+        <div className="icon-display">
+          <div className="message-icon-container">
+            <div className="message-icon">
+              <MessageSquare />
             </div>
           </div>
         </div>
 
         {/* Welcome Text */}
-        <h2 className="text-2xl font-bold">Welcome to PingMe!</h2>
-        <p className="text-base-content/60">
-          Select a conversation from the sidebar to start chatting
-        </p>
+        <div className="welcome-text">
+          <h2 className="welcome-title">Welcome to PingMe!</h2>
+          <p className="welcome-description">
+            Select a conversation from the sidebar to start chatting with your friends and stay connected.
+          </p>
+        </div>
+
+        {/* Feature List */}
+        <div className="feature-list">
+          <div className="feature-item">
+            <div className="feature-icon">
+              <Users />
+            </div>
+            <span className="feature-text">Connect with friends instantly</span>
+          </div>
+          
+          <div className="feature-item">
+            <div className="feature-icon">
+              <ImageIcon />
+            </div>
+            <span className="feature-text">Share photos and memories</span>
+          </div>
+          
+          <div className="feature-item">
+            <div className="feature-icon">
+              <Smile />
+            </div>
+            <span className="feature-text">Express yourself freely</span>
+          </div>
+        </div>
       </div>
     </div>
   );
