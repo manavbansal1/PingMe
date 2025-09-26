@@ -1,50 +1,92 @@
-import { Routes, Route, Navigate } from 'react-router-dom'
-import { useAuthStore } from './store/useAuthStore'
-import { useEffect } from 'react'
-import {Loader} from 'lucide-react'
-import { Toaster } from 'react-hot-toast'
-import './App.css'
-import Navbar from './Components/Navbar'
-import HomePage from './Pages/HomePage'
-import SignUpPage from './Pages/SignUpPage'
-import LoginPage from './Pages/LoginPage'
-import SettingsPage from './Pages/Settings'
-import ProfilePage from './Pages/ProfilePage'
+import { useEffect } from "react";
+import { Routes, Route, Navigate, useLocation, Link } from "react-router-dom";
+import { useAuthStore } from "./store/useAuthStore";
+import { MessageSquare, MessageCircle, User, LogOut } from "lucide-react";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './App.css';
 
+import HomePage from "./Pages/HomePage.jsx";
+import SignUpPage from "./Pages/SignUpPage.jsx";
+import LoginPage from "./Pages/LoginPage.jsx";
+import SettingsPage from "./Pages/Settings.jsx";
+import ProfilePage from "./Pages/ProfilePage.jsx";
 
 const App = () => {
-
-  const {authUser, checkAuth, isCheckingAuth, onlineUsers} = useAuthStore();
-
-  console.log({onlineUsers});
+  
+  // Get the states from zustand 
+  const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
+  const location = useLocation();
 
   useEffect(() => {
     checkAuth();
   }, [checkAuth]);
 
-  console.log({authUser});
-
-  if(isCheckingAuth && !authUser){
-    return(
-      <div className='flex justify-center items-center h-screen'>
-        <Loader className="size-10 animate-spin"/>
+  if (isCheckingAuth && !authUser) {
+    return (
+      <div className="d-flex justify-content-center align-items-center vh-100">
+        <div className="spinner-border text-primary" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
       </div>
     );
   }
 
-  return (
-    <div>
-       <Navbar/>
-        <Routes>
-          <Route path='/' element={authUser ? <HomePage/> : <Navigate to='/login'/>}/>
-          <Route path='/signup' element={ !authUser ?  <SignUpPage/> : <Navigate to='/'/> }/>
-          <Route path='/login' element={ !authUser ? <LoginPage/>: <Navigate to='/'/> }/>
-          <Route path='/settings' element={<SettingsPage/>}/>
-          <Route path='/profile' element={authUser ? <ProfilePage/> : <Navigate to='/login'/>}/>
-        </Routes>
-      <Toaster/> 
-    </div>
-  )
-}
+  const isAuthPage = location.pathname === '/login' || location.pathname === '/signup';
 
-export default App
+  return (
+    <div className="app-container">
+      {/* Top Branding - Show on all pages */}
+      <div className="top-branding">
+        <div className="brand-logo">
+          <div className="brand-icon">
+            <MessageSquare />
+          </div>
+          <h1 className="brand-text">PingMe</h1>
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div className="main-content">
+        <Routes>
+          {/* Conditional renderingh if the user is authenticated */}
+          <Route path="/" element={authUser ? <HomePage /> : <Navigate to="/login" />} />
+          <Route path="/signup" element={!authUser ? <SignUpPage /> : <Navigate to="/" />}/>
+          <Route path="/login" element={!authUser ? <LoginPage /> : <Navigate to="/" />}/>
+          <Route path="/settings"element={authUser ? <SettingsPage /> : <Navigate to="/login" />}/>
+          <Route path="/profile" element={authUser ? <ProfilePage /> : <Navigate to="/login" />} />
+        </Routes>
+      </div>
+      {/* Conditional renderingh if the user is authenticated */}
+      {authUser && !isAuthPage && <BottomNavigation />}
+    </div>
+  );
+};
+
+const BottomNavigation = () => {
+  const { logout } = useAuthStore();
+  const location = useLocation();
+
+  const handleLogout = () => {
+    logout();
+  };
+
+  return (
+    <div className="bottom-nav">
+      <div className="nav-items">
+        <Link to="/" className={`nav-item ${location.pathname === '/' ? 'active' : ''}`}>
+          <MessageCircle /><span>Chat</span>
+        </Link>
+        
+        <Link to="/profile" className={`nav-item ${location.pathname === '/profile' ? 'active' : ''}`} >
+          <User /><span>Profile</span>
+        </Link>
+        
+        <button onClick={handleLogout} className="nav-item">
+          <LogOut /><span>Logout</span>
+          </button>
+      </div>
+    </div>
+  );
+};
+
+export default App;
