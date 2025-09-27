@@ -8,7 +8,6 @@ import './App.css';
 import HomePage from "./Pages/HomePage.jsx";
 import SignUpPage from "./Pages/SignUpPage.jsx";
 import LoginPage from "./Pages/LoginPage.jsx";
-import SettingsPage from "./Pages/Settings.jsx";
 import ProfilePage from "./Pages/ProfilePage.jsx";
 
 const App = () => {
@@ -52,7 +51,6 @@ const App = () => {
           <Route path="/" element={authUser ? <HomePage /> : <Navigate to="/login" />} />
           <Route path="/signup" element={!authUser ? <SignUpPage /> : <Navigate to="/" />}/>
           <Route path="/login" element={!authUser ? <LoginPage /> : <Navigate to="/" />}/>
-          <Route path="/settings"element={authUser ? <SettingsPage /> : <Navigate to="/login" />}/>
           <Route path="/profile" element={authUser ? <ProfilePage /> : <Navigate to="/login" />} />
         </Routes>
       </div>
