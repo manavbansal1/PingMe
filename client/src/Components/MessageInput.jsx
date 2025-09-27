@@ -78,39 +78,37 @@ const MessageInput = () => {
       )}
 
       <form onSubmit={handleSendMessage} className="input-form">
-        <div className="input-section">
-          <textarea
-            className="message-input"
-            placeholder="Type a message..."
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-            onKeyPress={handleKeyPress}
-            rows="1"
-          />
-          
-          <input
-            type="file"
-            accept="image/*"
-            className="file-input"
-            ref={fileInputRef}
-            onChange={handleImageChange}
-          />
-
-          <button
-            type="button"
-            className={`image-button ${imagePreview ? 'has-image' : ''}`}
-            onClick={() => fileInputRef.current?.click()}
-          >
-            <Image />
-          </button>
-        </div>
+        <button
+          type="button"
+          className={`image-button ${imagePreview ? 'has-image' : ''}`}
+          onClick={() => fileInputRef.current?.click()}
+        >
+          <Image />
+        </button>
+        
+        <textarea
+          className="message-input"
+          placeholder="Type a message..."
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          onKeyPress={handleKeyPress}
+          rows="1"
+        />
+        
+        <input
+          type="file"
+          accept="image/*"
+          className="file-input"
+          ref={fileInputRef}
+          onChange={handleImageChange}
+        />
         
         <button
           type="submit"
           className="send-button"
           disabled={!text.trim() && !imagePreview}
         >
-          <Send />
+          <Send/>
         </button>
       </form>
     </div>
