@@ -17,28 +17,6 @@
   border: 1px solid #e2e8f0;
 }
 
-/* Mobile Responsive */
-@media (max-width: 768px) {
-  .home-page {
-    padding: 0.5rem;
-  }
-  
-  .home-container {
-    height: calc(100vh - 160px);
-    border-radius: 8px;
-    flex-direction: column;
-  }
-  
-  /* Hide sidebar on mobile when chat is selected */
-  .home-container.chat-active .sidebar-component {
-    display: none;
-  }
-  
-  .home-container.chat-active .chat-area {
-    width: 100%;
-  }
-}
-
 .sidebar-component {
   width: 320px;
   border-right: 1px solid #e2e8f0;
@@ -53,14 +31,51 @@
   background: white;
 }
 
+.no-chat-wrapper {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Mobile Responsive */
 @media (max-width: 768px) {
-  .sidebar-component {
-    width: 100%;
-    max-height: 40vh;
+  .home-page {
+    padding: 0.5rem;
   }
   
-  .chat-area {
-    flex: 1;
-    min-height: 60vh;
+  .home-container {
+    height: calc(100vh - 160px);
+    border-radius: 8px;
+    flex-direction: column;
+  }
+  
+  .sidebar-component {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid #e2e8f0;
+  }
+  
+  .no-chat-wrapper {
+    display: none;
+  }
+  
+  .home-container:not(.chat-active) .chat-area {
+    display: none;
+  }
+  
+  .home-container:not(.chat-active) .sidebar-component {
+    width: 100%;
+    height: 100%;
+    border-bottom: none;
+  }
+
+  .home-container.chat-active .sidebar-component {
+    display: none;
+  }
+  
+  .home-container.chat-active .chat-area {
+    width: 100%;
+    display: flex;
   }
 }

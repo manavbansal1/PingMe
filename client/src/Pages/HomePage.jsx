@@ -14,7 +14,11 @@ const HomePage = () => {
           <Sidebar />
         </div>
         <div className="chat-area">
-          {!selectedUser ? <NoChatSelected /> : <ChatContainer />}
+          {!selectedUser ? (
+            <div className="no-chat-wrapper">
+              <NoChatSelected />
+            </div>
+          )  : <ChatContainer />}
         </div>
       </div>
     </div>
